@@ -14,7 +14,7 @@
 :root{
   --bg:#f2f4f6; --surface:#ffffff; --ink:#15202a; --muted:#566673; --line:#d9e0e6;
   --accent:#1d5d8f; --accent-ink:#ffffff; --danger:#b3261e;
-  --c-aberto:#1d5d8f; --c-aprovado:#a35f08; --c-executado:#6847b0; --c-pago:#1e7a4c; --c-arquivado:#66737e;
+  --c-aberto:#1d5d8f; --c-servico:#0f7b8a; --c-aprovado:#a35f08; --c-executado:#6847b0; --c-pago:#1e7a4c; --c-arquivado:#66737e;
   --font:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   color-scheme:light;
 }
@@ -22,14 +22,14 @@
   :root:not([data-theme="light"]){
     --bg:#0e1419; --surface:#172028; --ink:#e7edf2; --muted:#92a2af; --line:#2a3640;
     --accent:#5aa9e6; --accent-ink:#0b1822; --danger:#f2938b;
-    --c-aberto:#63aee9; --c-aprovado:#e0a252; --c-executado:#a995e6; --c-pago:#5cc690; --c-arquivado:#9aa7b2;
+    --c-aberto:#63aee9; --c-servico:#5cc3d1; --c-aprovado:#e0a252; --c-executado:#a995e6; --c-pago:#5cc690; --c-arquivado:#9aa7b2;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0e1419; --surface:#172028; --ink:#e7edf2; --muted:#92a2af; --line:#2a3640;
   --accent:#5aa9e6; --accent-ink:#0b1822; --danger:#f2938b;
-  --c-aberto:#63aee9; --c-aprovado:#e0a252; --c-executado:#a995e6; --c-pago:#5cc690; --c-arquivado:#9aa7b2;
+  --c-aberto:#63aee9; --c-servico:#5cc3d1; --c-aprovado:#e0a252; --c-executado:#a995e6; --c-pago:#5cc690; --c-arquivado:#9aa7b2;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -123,10 +123,11 @@ import {initializeFirestore,persistentLocalCache,persistentMultipleTabManager,co
 import {firebaseConfig} from './firebase-config.js';
 
 const STAGES=[
- {k:'aberto',label:'Abertos',hint:'Orçamentos aprovados e OS abertas. Aqui entra o serviço a executar.',next:'aprovado',nextLabel:'Serviço pronto, emitir nota'},
- {k:'aprovado',label:'Emitir Nota',hint:'Serviço finalizado e pronto para emitir a nota.',next:'executado',nextLabel:'Nota emitida'},
- {k:'executado',label:'Executados',hint:'Nota emitida. Conferir o envio e passar para Finalizado.',next:'pago',nextLabel:'Envio conferido, mover para Finalizado'},
- {k:'pago',label:'Finalizado',hint:'Nota enviada, conferida e paga.',next:'arquivado',nextLabel:'Arquivar'},
+ {k:'aberto',label:'Abertos',hint:'Orçamentos aprovados e OS abertas. Aqui entra o serviço a executar.',next:'servico',nextLabel:'Serviço executado'},
+ {k:'servico',label:'Executados',hint:'Serviço executado. Falta emitir a nota.',next:'aprovado',nextLabel:'Pronto, emitir NF'},
+ {k:'aprovado',label:'Emitir NF',hint:'Serviço finalizado e pronto para emitir a nota.',next:'executado',nextLabel:'Nota emitida e enviada'},
+ {k:'executado',label:'NF Enviada',hint:'Nota emitida e enviada. Aguardando o pagamento.',next:'pago',nextLabel:'Pagamento recebido, mover para Pagos'},
+ {k:'pago',label:'Pagos',hint:'Pagamento recebido.',next:'arquivado',nextLabel:'Arquivar'},
  {k:'arquivado',label:'Arquivados',hint:'Histórico. Resgate uma OS para reabri-la em Abertos.',next:'aberto',nextLabel:'Resgatar para Abertos'}
 ];
 const SUGGEST=['Ilhas Marianas','Hamptons','Pena Forte','Empire Residence','La Martina Residence','Mirante Camboriú'];
